@@ -63,6 +63,7 @@ class ProductdetailController extends Controller
             ['fieldName' => 'purchase_price', 'class' => 'text-center'],
             ['fieldName' => 'tax', 'class' => 'text-center'],
             ['fieldName' => 'discount', 'class' => 'text-center'],
+            ['fieldName' => 'image', 'class' => 'text-center'],
         ];
     }
     private function getTableHeaders()
@@ -78,6 +79,7 @@ class ProductdetailController extends Controller
             'Purchase Price',
             'Tax',
             'Discount',
+            'Image',
             'Action'
         ];
     }
@@ -88,6 +90,9 @@ class ProductdetailController extends Controller
 
         if (request()->filled('name'))
             $query->where('name', 'like', request()->name . '%');
+
+            if (request()->filled('image'))
+            $query->where('image', 'like', request()->image . '%');
 
         $datas = $query->paginate(request()->numOfData ?? 10)->withQueryString();
 
@@ -105,6 +110,8 @@ class ProductdetailController extends Controller
             $customData->purchase_price = $data->purchase_price;
             $customData->tax = $data->tax;
             $customData->discount = $data->discount;
+            // $customData->image = $data->image;
+            $customData->image = '<img src="' . $data->image . '" height="60" width="70"/>';
             $customData->hasLink = true;
             $customData->links = [
 
@@ -157,6 +164,9 @@ class ProductdetailController extends Controller
         try {
 
             $data = $request->validated();
+
+            if ($request->hasFile('image'))
+            $data['image'] = $this->imageUpload($request->file('image'), 'productdetail');
 
             $dataInfo = $this->productdetailService->create($data);
 
@@ -220,6 +230,10 @@ class ProductdetailController extends Controller
         try {
 
             $data = $request->validated();
+
+            if ($request->hasFile('image'))
+            $data['image'] = $this->imageUpload($request->file('image'), 'productdetails');
+        
             $productdetail = $this->productdetailService->find($id);
 
 

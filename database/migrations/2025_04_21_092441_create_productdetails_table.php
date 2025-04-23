@@ -27,7 +27,8 @@ return new class extends Migration
                 $table->string('selling_price', 255);              
                 $table->string('purchase_price', 255);              
                 $table->string('tax', 255);              
-                $table->string('discount', 255);              
+                $table->string('discount', 255);  
+                $table->string('image', 255)->nullable();            
                 $table->enum('status', ['Active', 'Inactive', 'Deleted'])->default('Active');
                 $table->timestamps();
                 $table->softDeletes();

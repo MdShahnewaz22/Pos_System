@@ -26,6 +26,7 @@ class ProductdetailRequest extends FormRequest
                     'purchase_price' => 'required|string',
                     'tax' => 'required|string',
                     'discount' => 'required|string',
+                    'image' => 'nullable|mimes:png,jpg,jpeg|max:25048',
                 ];
                 break;
 
@@ -41,7 +42,15 @@ class ProductdetailRequest extends FormRequest
                     'purchase_price' => 'required|string',
                     'tax' => 'required|string',
                     'discount' => 'required|string',
+                    // 'image' => 'nullable|mimes:png,jpg,jpeg|max:25048',
                 ];
+                if ($this->hasFile('image')) {
+                    $rules['image'] = 'nullable|file|mimes:png,jpg,jpeg|max:25048';
+                } else {
+
+                    $rules['image'] = 'nullable';
+                }
+                return $rules;
                 break;
         }
     }

@@ -8,7 +8,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import AlertMessage from "@/Components/AlertMessage.vue";
 import { displayResponse, displayWarning } from "@/responseMessage.js";
 
-const props = defineProps(["productdetail", "products","units","colors","sizes", "id"]);
+const props = defineProps(["productdetail", "products", "units", "colors", "sizes", "id"]);
 
 const form = useForm({
 
@@ -21,9 +21,26 @@ const form = useForm({
   purchase_price: props.productdetail?.purchase_price ?? "",
   tax: props.productdetail?.tax ?? "",
   discount: props.productdetail?.discount ?? "",
-  massage: props.productdetail?.massage ?? "",
+
+  image: props.productdetail?.image ?? "",
+
+  imagePreview: props.productdetail?.image ?? "",
+  filePreview: props.productdetail?.file ?? "",
   _method: props.productdetail?.id ? "put" : "post",
+  massage: props.productdetail?.massage ?? "",
 });
+
+const handleimage = (event) => {
+  const file = event.target.files[0];
+  form.image = file;
+
+  // Display image preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    form.imagePreview = e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
 
 const submit = () => {
   const routeName = props.id
@@ -50,11 +67,9 @@ const submit = () => {
 <template>
   <BackendLayout>
     <div
-      class="w-full mt-3 transition duration-1000 ease-in-out transform bg-white border border-gray-700 rounded-md shadow-lg shadow-gray-800/50 dark:bg-slate-900"
-    >
+      class="w-full mt-3 transition duration-1000 ease-in-out transform bg-white border border-gray-700 rounded-md shadow-lg shadow-gray-800/50 dark:bg-slate-900">
       <div
-        class="flex items-center justify-between w-full text-gray-700 bg-gray-100 rounded-md shadow-md dark:bg-gray-800 dark:text-gray-200 shadow-gray-800/50"
-      >
+        class="flex items-center justify-between w-full text-gray-700 bg-gray-100 rounded-md shadow-md dark:bg-gray-800 dark:text-gray-200 shadow-gray-800/50">
         <div>
           <h1 class="p-4 text-xl font-bold dark:text-white">
             {{ $page.props.pageTitle }}
@@ -65,18 +80,13 @@ const submit = () => {
 
       <form @submit.prevent="submit" class="p-4">
         <AlertMessage />
-        <div
-          class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4"
-        >
-          
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+
           <div class="col-span-2 md:col-span-2">
             <InputLabel for="product_id" value="product Name" />
-            <select
-              id="product_id"
+            <select id="product_id"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.product_id"
-      
-            >
+              v-model="form.product_id">
               <option value="">--Select Product--</option>
               <template v-for="(product, Index) in products" :key="Index">
                 <option :value="product.id">
@@ -89,12 +99,9 @@ const submit = () => {
 
           <div class="col-span-2 md:col-span-2">
             <InputLabel for="unit_id" value="Unit Name" />
-            <select
-              id="unit_id"
+            <select id="unit_id"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.unit_id"
-      
-            >
+              v-model="form.unit_id">
               <option value="">--Select Product--</option>
               <template v-for="(unit, Index) in units" :key="Index">
                 <option :value="unit.id">
@@ -106,23 +113,16 @@ const submit = () => {
           </div>
           <div class="col-span-1 md:col-span-2">
             <InputLabel for="unit_value" value="Unit value" />
-            <input
-              id="unit_value"
+            <input id="unit_value"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.unit_value"
-              type="text"
-              placeholder="Unit Value"
-            />
+              v-model="form.unit_value" type="text" placeholder="Unit Value" />
             <InputError class="mt-2" :message="form.errors.unit_value" />
           </div>
           <div class="col-span-2 md:col-span-2">
             <InputLabel for="color_id" value="Color Name" />
-            <select
-              id="color_id"
+            <select id="color_id"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.color_id"
-      
-            >
+              v-model="form.color_id">
               <option value="">--Select Color--</option>
               <template v-for="(color, Index) in colors" :key="Index">
                 <option :value="color.id">
@@ -134,12 +134,9 @@ const submit = () => {
           </div>
           <div class="col-span-2 md:col-span-2">
             <InputLabel for="size_id" value="Size Name" />
-            <select
-              id="size_id"
+            <select id="size_id"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.size_id"
-      
-            >
+              v-model="form.size_id">
               <option value="">--Select Size--</option>
               <template v-for="(size, Index) in sizes" :key="Index">
                 <option :value="size.id">
@@ -150,63 +147,54 @@ const submit = () => {
             <InputError class="mt-2" :message="form.errors.size_id" />
           </div>
 
-          
+
           <div class="col-span-1 md:col-span-2">
             <InputLabel for="selling_price" value="Selling Price" />
-            <input
-              id="selling_price"
+            <input id="selling_price"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.selling_price"
-              type="text"
-              placeholder="Selling Price"
-            />
+              v-model="form.selling_price" type="text" placeholder="Selling Price" />
             <InputError class="mt-2" :message="form.errors.selling_price" />
           </div>
           <div class="col-span-1 md:col-span-2">
             <InputLabel for="purchase_price" value="Purchase Price" />
-            <input
-              id="purchase_price"
+            <input id="purchase_price"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.purchase_price"
-              type="text"
-              placeholder="Purchase Price"
-            />
+              v-model="form.purchase_price" type="text" placeholder="Purchase Price" />
             <InputError class="mt-2" :message="form.errors.purchase_price" />
           </div>
           <div class="col-span-1 md:col-span-2">
             <InputLabel for="tax" value="Tax %" />
-            <input
-              id="tax"
+            <input id="tax"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.tax"
-              type="text"
-              placeholder="Tax %"
-            />
+              v-model="form.tax" type="text" placeholder="Tax %" />
             <InputError class="mt-2" :message="form.errors.tax" />
           </div>
           <div class="col-span-1 md:col-span-2">
             <InputLabel for="discount" value="Discount %" />
-            <input
-              id="discount"
+            <input id="discount"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.discount"
-              type="text"
-              placeholder="Discount %"
-            />
+              v-model="form.discount" type="text" placeholder="Discount %" />
             <InputError class="mt-2" :message="form.errors.discount" />
           </div>
-          
+
+          <div class="col-span-1 md:col-span-2">
+            <InputLabel for="image" value="Image" />
+            <div v-if="form.imagePreview">
+              <img :src="form.imagePreview" alt="Photo Preview" class="max-w-xs mt-2" height="60" width="60" />
+            </div>
+            <input id="image" type="file" accept="image/*"
+              class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
+              @change="handleimage" />
+            <InputError class="mt-2" :message="form.errors.image" />
+          </div>
+
 
           <!-- add filde  -->
         </div>
 
         <div class="flex items-center justify-end mt-4">
-          <PrimaryButton
-            type="submit"
-            class="ms-4"
-            :class="{ 'opacity-25': form.processing }"
-            :disabled="form.processing"
-          >
+          <PrimaryButton type="submit" class="ms-4" :class="{ 'opacity-25': form.processing }"
+            :disabled="form.processing">
             {{ props.id ?? false ? "Update" : "Create" }}
           </PrimaryButton>
         </div>

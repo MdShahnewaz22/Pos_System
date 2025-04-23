@@ -9,7 +9,7 @@ class Productdetail extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id','unit_id','unit_value','color_id','size_id','selling_price','purchase_price','tax','discount','status','created_at','updated_at','deleted_at'];
+    protected $fillable = ['product_id','unit_id','unit_value','color_id','size_id','selling_price','purchase_price','tax','discount','image','status','created_at','updated_at','deleted_at'];
 
     protected static function boot()
     {
@@ -61,6 +61,12 @@ class Productdetail extends Model
     public function sizes()
     {
         return $this->hasMany(size::class,"size_id","id");
+    }
+
+    public function getImageAttribute($value)
+    {
+
+        return (!is_null($value)) ? env('APP_URL') . '/public/storage/' . $value : null;
     }
 
 
