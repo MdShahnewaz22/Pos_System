@@ -1,0 +1,283 @@
+<?php
+
+namespace App\Http\Controllers\Backend;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductdetailRequest;
+use App\Models\Productdetail;
+use Illuminate\Support\Facades\DB;
+use App\Services\ProductdetailService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
+use Inertia\Inertia;
+use App\Traits\SystemTrait;
+use Exception;
+
+class ProductdetailController extends Controller
+{
+    use SystemTrait;
+
+    protected $productdetailService;
+
+    public function __construct(ProductdetailService $productdetailService)
+    {
+        $this->productdetailService = $productdetailService;
+    }
+
+    public function index()
+    {
+        return Inertia::render(
+            'Backend/Productdetail/Index',
+            [
+                'pageTitle' => fn() => 'Productdetail List',
+                'breadcrumbs' => fn() => [
+                    ['link' => null, 'title' => 'Productdetail Manage'],
+                    ['link' => route('backend.productdetail.index'), 'title' => 'Productdetail List'],
+                ],
+                'tableHeaders' => fn() => $this->getTableHeaders(),
+                'dataFields' => fn() => $this->getDataFields(),
+                'datas' => fn() => $this->getDatas(),
+            ]
+        );
+    }
+
+    private function getDataFields()
+    {
+        return [
+            ['fieldName' => 'index', 'class' => 'text-center'],
+            ['fieldName' => 'name', 'class' => 'text-center'],
+        ];
+    }
+    private function getTableHeaders()
+    {
+        return [
+            'Sl/No',
+            'Name',
+            'Action'
+        ];
+    }
+
+    private function getDatas()
+    {
+        $query = $this->productdetailService->list();
+
+        if (request()->filled('name'))
+            $query->where('name', 'like', request()->name . '%');
+
+        $datas = $query->paginate(request()->numOfData ?? 10)->withQueryString();
+
+        $formatedDatas = $datas->map(function ($data, $index) {
+            $customData = new \stdClass();
+            $customData->index = $index + 1;
+
+            $customData->name = $data->name;
+            $customData->hasLink = true;
+            $customData->links = [
+
+                //   [
+                //     'linkClass' => 'semi-bold text-white statusChange ' . (($data->status == 'Active') ? "bg-gray-500" : "bg-green-500"),
+                //     'link' => route('backend.productdetail.status.change', ['id' => $data->id, 'status' => $data->status == 'Active' ? 'Inactive' : 'Active']),
+                //     'linkLabel' => getLinkLabel((($data->status == 'Active') ? "Inactive" : "Active"), null, null)
+                // ],
+
+                [
+                    'linkClass' => 'bg-yellow-400 text-black semi-bold',
+                    'link' => route('backend.productdetail.edit', $data->id),
+                    'linkLabel' => getLinkLabel('Edit', null, null)
+                ],
+                [
+                    'linkClass' => 'deleteButton bg-red-500 text-white semi-bold',
+                    'link' => route('backend.productdetail.destroy', $data->id),
+                    'linkLabel' => getLinkLabel('Delete', null, null)
+                ]
+            ];
+            return $customData;
+        });
+
+        return regeneratePagination($formatedDatas, $datas->total(), $datas->perPage(), $datas->currentPage());
+    }
+
+    public function create()
+    {
+        return Inertia::render(
+            'Backend/Productdetail/Form',
+            [
+                'pageTitle' => fn() => 'Productdetail Create',
+                'breadcrumbs' => fn() => [
+                    ['link' => null, 'title' => 'Productdetail Manage'],
+                    ['link' => route('backend.productdetail.create'), 'title' => 'Productdetail Create'],
+                ],
+            ]
+        );
+    }
+
+
+    public function store(ProductdetailRequest $request)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            $data = $request->validated();
+
+            $dataInfo = $this->productdetailService->create($data);
+
+            if ($dataInfo) {
+                $message = 'Productdetail created successfully';
+                $this->storeAdminWorkLog($dataInfo->id, 'productdetails', $message);
+
+                DB::commit();
+
+                return redirect()
+                    ->back()
+                    ->with('successMessage', $message);
+            } else {
+                DB::rollBack();
+
+                $message = "Failed To create Productdetail.";
+                return redirect()
+                    ->back()
+                    ->with('errorMessage', $message);
+            }
+        } catch (Exception $err) {
+
+            DB::rollBack();
+            $this->storeSystemError('Backend', 'ProductdetailController', 'store', substr($err->getMessage(), 0, 1000));
+
+            DB::commit();
+            $message = "Server Errors Occur. Please Try Again.";
+
+            return redirect()
+                ->back()
+                ->with('errorMessage', $message);
+        }
+    }
+
+    public function edit($id)
+    {
+        $productdetail = $this->productdetailService->find($id);
+
+        return Inertia::render(
+            'Backend/Productdetail/Form',
+            [
+                'pageTitle' => fn() => 'Productdetail Edit',
+                'breadcrumbs' => fn() => [
+                    ['link' => null, 'title' => 'Productdetail Manage'],
+                    ['link' => route('backend.productdetail.edit', $id), 'title' => 'Productdetail Edit'],
+                ],
+                'productdetail' => fn() => $productdetail,
+                'id' => fn() => $id,
+            ]
+        );
+    }
+
+    public function update(ProductdetailRequest $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+
+            $data = $request->validated();
+            $productdetail = $this->productdetailService->find($id);
+
+
+            $dataInfo = $this->productdetailService->update($data, $id);
+
+            if ($dataInfo->save()) {
+                $message = 'Productdetail updated successfully';
+                $this->storeAdminWorkLog($dataInfo->id, 'productdetails', $message);
+
+                DB::commit();
+
+                return redirect()
+                    ->back()
+                    ->with('successMessage', $message);
+            } else {
+                DB::rollBack();
+
+                $message = "Failed To update productdetail.";
+                return redirect()
+                    ->back()
+                    ->with('errorMessage', $message);
+            }
+        } catch (Exception $err) {
+            DB::rollBack();
+            $this->storeSystemError('Backend', 'Productdetailcontroller', 'update', substr($err->getMessage(), 0, 1000));
+            DB::commit();
+            $message = "Server Errors Occur. Please Try Again.";
+            return redirect()
+                ->back()
+                ->with('errorMessage', $message);
+        }
+    }
+
+    public function destroy($id)
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+            if ($this->productdetailService->delete($id)) {
+                $message = 'productdetail deleted successfully';
+                $this->storeAdminWorkLog($id, 'productdetails', $message);
+
+                DB::commit();
+
+                return redirect()
+                    ->back()
+                    ->with('successMessage', $message);
+            } else {
+                DB::rollBack();
+
+                $message = "Failed To Delete productdetail.";
+                return redirect()
+                    ->back()
+                    ->with('errorMessage', $message);
+            }
+        } catch (Exception $err) {
+            DB::rollBack();
+            $this->storeSystemError('Backend', 'Productdetailcontroller', 'destroy', substr($err->getMessage(), 0, 1000));
+            DB::commit();
+            $message = "Server Errors Occur. Please Try Again.";
+            return redirect()
+                ->back()
+                ->with('errorMessage', $message);
+        }
+    }
+
+    public function changeStatus()
+    {
+        DB::beginTransaction();
+
+        try {
+            $dataInfo = $this->productdetailService->changeStatus(request());
+
+            if ($dataInfo->wasChanged()) {
+                $message = 'Productdetail ' . request()->status . ' Successfully';
+                $this->storeAdminWorkLog($dataInfo->id, 'productdetails', $message);
+
+                DB::commit();
+
+                return redirect()
+                    ->back()
+                    ->with('successMessage', $message);
+            } else {
+                DB::rollBack();
+
+                $message = "Failed To " . request()->status . " Productdetail.";
+                return redirect()
+                    ->back()
+                    ->with('errorMessage', $message);
+            }
+        } catch (Exception $err) {
+            DB::rollBack();
+            $this->storeSystemError('Backend', 'ProductdetailController', 'changeStatus', substr($err->getMessage(), 0, 1000));
+            DB::commit();
+            $message = "Server Errors Occur. Please Try Again.";
+            return redirect()
+                ->back()
+                ->withErrors(['error' => $message]);
+        }
+    }
+}
