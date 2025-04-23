@@ -20,7 +20,7 @@ class ProductService
 
     public function all()
     {
-        return $this->productModel->whereNull('deleted_at')->all();
+        return $this->productModel->whereNull('deleted_at')->get();
     }
 
     public function find($id)

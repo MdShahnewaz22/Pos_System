@@ -31,6 +31,10 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
 
             AdminSeeder::class,
+            ProductSeeder::class,
+            ColorSeeder::class,
+            SizeSeeder::class,
+            UnitSeeder::class,
           
         ]);
     }

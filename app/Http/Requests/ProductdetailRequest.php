@@ -17,14 +17,30 @@ class ProductdetailRequest extends FormRequest
         switch ($this->method()) {
             case 'POST':
                 return [
-                    'name' => 'required|string',
+                    'product_id' => '',
+                    'unit_id' => '',
+                    'unit_value' => 'required|string',
+                    'color_id' => '',
+                    'size_id' => '',
+                    'selling_price' => 'required|string',
+                    'purchase_price' => 'required|string',
+                    'tax' => 'required|string',
+                    'discount' => 'required|string',
                 ];
                 break;
 
             case 'PATCH':
             case 'PUT':
                 return [
-                    'name' => 'required|string',
+                    'product_id' => '',
+                    'unit_id' => '',
+                    'unit_value' => 'required|string',
+                    'color_id' => '',
+                    'size_id' => '',
+                    'selling_price' => 'required|string',
+                    'purchase_price' => 'required|string',
+                    'tax' => 'required|string',
+                    'discount' => 'required|string',
                 ];
                 break;
         }
@@ -33,7 +49,15 @@ class ProductdetailRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'The name field is required.',
+            'product_id.required' => 'The product name field is required.',
+            'unit_id.required' => 'The unit name field is required.',
+            'unit_value.required' => 'The unit value field is required.',
+            'color_id.required' => 'The color name field is required.',
+            'size_id.required' => 'The size name field is required.',
+            'selling_price.required' => 'The selling price field is required.',
+            'purchase_price.required' => 'The purchase price field is required.',
+            'tax.required' => 'The purchase price field is required.',
+            'discount.required' => 'The purchase price field is required.',
         ];
     }
 }

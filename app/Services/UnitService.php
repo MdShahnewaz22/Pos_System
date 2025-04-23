@@ -20,7 +20,7 @@ class UnitService
 
     public function all()
     {
-        return $this->unitModel->whereNull('deleted_at')->all();
+        return $this->unitModel->whereNull('deleted_at')->get();
     }
 
     public function find($id)

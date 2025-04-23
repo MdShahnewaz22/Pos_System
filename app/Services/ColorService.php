@@ -20,7 +20,7 @@ class ColorService
 
     public function all()
     {
-        return $this->colorModel->whereNull('deleted_at')->all();
+        return $this->colorModel->whereNull('deleted_at')->get();
     }
 
     public function find($id)

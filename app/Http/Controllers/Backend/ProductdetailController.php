@@ -7,6 +7,10 @@ use App\Http\Requests\ProductdetailRequest;
 use App\Models\Productdetail;
 use Illuminate\Support\Facades\DB;
 use App\Services\ProductdetailService;
+use App\Services\ProductService;
+use App\Services\UnitService;
+use App\Services\ColorService;
+use App\Services\SizeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
@@ -18,11 +22,15 @@ class ProductdetailController extends Controller
 {
     use SystemTrait;
 
-    protected $productdetailService;
+    protected $productdetailService,$productService,$unitService,$colorService,$sizeService;
 
-    public function __construct(ProductdetailService $productdetailService)
+    public function __construct(ProductdetailService $productdetailService,ProductService $productService,UnitService $unitService,ColorService $colorService,SizeService $sizeService)
     {
         $this->productdetailService = $productdetailService;
+        $this->productService = $productService;
+        $this->unitService = $unitService;
+        $this->colorService = $colorService;
+        $this->sizeService = $sizeService;
     }
 
     public function index()
@@ -46,14 +54,30 @@ class ProductdetailController extends Controller
     {
         return [
             ['fieldName' => 'index', 'class' => 'text-center'],
-            ['fieldName' => 'name', 'class' => 'text-center'],
+            ['fieldName' => 'product_id', 'class' => 'text-center'],
+            ['fieldName' => 'unit_id', 'class' => 'text-center'],
+            ['fieldName' => 'unit_value', 'class' => 'text-center'],
+            ['fieldName' => 'color_id', 'class' => 'text-center'],
+            ['fieldName' => 'size_id', 'class' => 'text-center'],
+            ['fieldName' => 'selling_price', 'class' => 'text-center'],
+            ['fieldName' => 'purchase_price', 'class' => 'text-center'],
+            ['fieldName' => 'tax', 'class' => 'text-center'],
+            ['fieldName' => 'discount', 'class' => 'text-center'],
         ];
     }
     private function getTableHeaders()
     {
         return [
             'Sl/No',
-            'Name',
+            'Product Name',
+            'Unit Name',
+            'Unit Value',
+            'Color Name',
+            'Size Name',
+            'Selling Price',
+            'Purchase Price',
+            'Tax',
+            'Discount',
             'Action'
         ];
     }
@@ -71,7 +95,16 @@ class ProductdetailController extends Controller
             $customData = new \stdClass();
             $customData->index = $index + 1;
 
-            $customData->name = $data->name;
+         
+            $customData->product_id = $data->product->name;
+            $customData->unit_id = $data->unit->name;
+            $customData->unit_value = $data->unit_value;
+            $customData->color_id = $data->color->name;
+            $customData->size_id = $data->size->name;
+            $customData->selling_price = $data->selling_price;
+            $customData->purchase_price = $data->purchase_price;
+            $customData->tax = $data->tax;
+            $customData->discount = $data->discount;
             $customData->hasLink = true;
             $customData->links = [
 
@@ -108,6 +141,10 @@ class ProductdetailController extends Controller
                     ['link' => null, 'title' => 'Productdetail Manage'],
                     ['link' => route('backend.productdetail.create'), 'title' => 'Productdetail Create'],
                 ],
+                'products' => fn() => $this->productService->all(),
+                'units' => fn() => $this->unitService->all(),
+                'colors' => fn() => $this->colorService->all(),
+                'sizes' => fn() => $this->sizeService->all(),
             ]
         );
     }
@@ -168,6 +205,11 @@ class ProductdetailController extends Controller
                 ],
                 'productdetail' => fn() => $productdetail,
                 'id' => fn() => $id,
+
+                'products' => fn() => $this->productService->all(),
+                'units' => fn() => $this->unitService->all(),
+                'colors' => fn() => $this->colorService->all(),
+                'sizes' => fn() => $this->sizeService->all(),
             ]
         );
     }

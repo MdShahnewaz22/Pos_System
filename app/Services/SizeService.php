@@ -20,7 +20,7 @@ class SizeService
 
     public function all()
     {
-        return $this->sizeModel->whereNull('deleted_at')->all();
+        return $this->sizeModel->whereNull('deleted_at')->get();
     }
 
     public function find($id)

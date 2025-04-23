@@ -9,7 +9,7 @@ class Productdetail extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','status','created_at','updated_at','deleted_at'];
+    protected $fillable = ['product_id','unit_id','unit_value','color_id','size_id','selling_price','purchase_price','tax','discount','status','created_at','updated_at','deleted_at'];
 
     protected static function boot()
     {
@@ -22,6 +22,47 @@ class Productdetail extends Model
             $model->updated_at = now();
         });
     }
+
+    public function product()
+    {
+        return $this->belongsTo(product::class, "product_id", "id");
+    }
+
+    public function products()
+    {
+        return $this->hasMany(product::class,"product_id","id");
+    }
+    //Unit
+    public function unit()
+    {
+        return $this->belongsTo(unit::class, "unit_id", "id");
+    }
+
+    public function units()
+    {
+        return $this->hasMany(unit::class,"unit_id","id");
+    }
+    //Color
+    public function color()
+    {
+        return $this->belongsTo(color::class, "color_id", "id");
+    }
+
+    public function colors()
+    {
+        return $this->hasMany(color::class,"color_id","id");
+    }
+    //Size
+    public function size()
+    {
+        return $this->belongsTo(size::class, "size_id", "id");
+    }
+
+    public function sizes()
+    {
+        return $this->hasMany(size::class,"size_id","id");
+    }
+
 
     
 }
