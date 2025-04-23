@@ -23,11 +23,12 @@ return new class extends Migration
                 $table->unsignedBigInteger('color_id');
                 $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');                
                 $table->unsignedBigInteger('size_id');
-                $table->foreign('size_id')->references('id')->on('sizes')->onDelete('cascade');  
-                $table->string('selling_price', 255);              
-                $table->string('purchase_price', 255);              
-                $table->string('tax', 255);              
-                $table->string('discount', 255);  
+                $table->foreign('size_id')->references('id')->on('sizes')->onDelete('cascade');                
+                $table->string('purchase_price', 255);  
+                $table->decimal('selling_price', 10, 2);            
+                $table->decimal('tax',  10, 2)->default(0)->change();              
+                $table->decimal('discount', 10, 2)->default(0)->change();  
+                $table->decimal('total_price', 10, 2);  
                 $table->string('image', 255)->nullable();            
                 $table->enum('status', ['Active', 'Inactive', 'Deleted'])->default('Active');
                 $table->timestamps();

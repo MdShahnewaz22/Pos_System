@@ -19,8 +19,9 @@ const form = useForm({
   size_id: props.productdetail?.size_id ?? "",
   selling_price: props.productdetail?.selling_price ?? "",
   purchase_price: props.productdetail?.purchase_price ?? "",
-  tax: props.productdetail?.tax ?? "",
-  discount: props.productdetail?.discount ?? "",
+  tax: props.productdetail?.tax ?? 0,
+  discount: props.productdetail?.discount ?? 0,
+  total_price: props.productdetail?.total_price ?? "",
 
   image: props.productdetail?.image ?? "",
 
@@ -62,6 +63,36 @@ const submit = () => {
       },
     });
 };
+
+
+import { watch } from "vue";
+
+// Watch for changes in selling_price, tax, and discount
+watch(
+  () => [form.selling_price, form.tax, form.discount],
+  ([newSellingPrice, newTax, newDiscount]) => {
+    const price = parseFloat(newSellingPrice) || 0;
+    const taxPercent = parseFloat(newTax) || 0;
+    const discountPercent = parseFloat(newDiscount) || 0;
+
+    // Step 1: Apply tax
+    let total = price + (price * taxPercent / 100);
+
+    // Step 2: Apply discount
+    total = total - (total * discountPercent / 100);
+
+    form.total_price = total.toFixed(2); // Keep it to 2 decimal places
+  }
+);
+
+
+// import { computed } from "vue";
+
+// const selectedProduct = computed(() => {
+//   return props.products.find((product) => product.id === form.product_id);
+// });
+
+
 </script>
 
 <template>
@@ -132,6 +163,21 @@ const submit = () => {
             </select>
             <InputError class="mt-2" :message="form.errors.color_id" />
           </div>
+          <!-- <div class="col-span-2 md:col-span-2" v-if="selectedProduct?.name !== 'Sugar'">
+            <InputLabel for="color_id" value="Color Name" />
+            <select id="color_id"
+              class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
+              v-model="form.color_id">
+              <option value="">--Select Color--</option>
+              <template v-for="(color, Index) in colors" :key="Index">
+                <option :value="color.id">
+                  {{ color.name }}
+                </option>
+              </template>
+            </select>
+            <InputError class="mt-2" :message="form.errors.color_id" />
+          </div> -->
+
           <div class="col-span-2 md:col-span-2">
             <InputLabel for="size_id" value="Size Name" />
             <select id="size_id"
@@ -147,14 +193,23 @@ const submit = () => {
             <InputError class="mt-2" :message="form.errors.size_id" />
           </div>
 
-
-          <div class="col-span-1 md:col-span-2">
-            <InputLabel for="selling_price" value="Selling Price" />
-            <input id="selling_price"
+          <!-- <div class="col-span-2 md:col-span-2" v-if="selectedProduct?.name !== 'Sugar'">
+            <InputLabel for="size_id" value="Size Name" />
+            <select id="size_id"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.selling_price" type="text" placeholder="Selling Price" />
-            <InputError class="mt-2" :message="form.errors.selling_price" />
-          </div>
+              v-model="form.size_id">
+              <option value="">--Select Size--</option>
+              <template v-for="(size, Index) in sizes" :key="Index">
+                <option :value="size.id">
+                  {{ size.name }}
+                </option>
+              </template>
+            </select>
+            <InputError class="mt-2" :message="form.errors.size_id" />
+          </div> -->
+
+
+
           <div class="col-span-1 md:col-span-2">
             <InputLabel for="purchase_price" value="Purchase Price" />
             <input id="purchase_price"
@@ -163,18 +218,33 @@ const submit = () => {
             <InputError class="mt-2" :message="form.errors.purchase_price" />
           </div>
           <div class="col-span-1 md:col-span-2">
+            <InputLabel for="selling_price" value="Selling Price" />
+            <input id="selling_price"
+              class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
+              v-model="form.selling_price" type="number" placeholder="Selling Price" />
+            <InputError class="mt-2" :message="form.errors.selling_price" />
+          </div>
+          <div class="col-span-1 md:col-span-2">
             <InputLabel for="tax" value="Tax %" />
             <input id="tax"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.tax" type="text" placeholder="Tax %" />
+              v-model="form.tax" type="number" placeholder="Tax %" />
             <InputError class="mt-2" :message="form.errors.tax" />
           </div>
           <div class="col-span-1 md:col-span-2">
             <InputLabel for="discount" value="Discount %" />
             <input id="discount"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.discount" type="text" placeholder="Discount %" />
+              v-model="form.discount" type="number" placeholder="Discount %" />
             <InputError class="mt-2" :message="form.errors.discount" />
+          </div>
+          <div class="col-span-1 md:col-span-2">
+            <InputLabel for="total_price" value="Total Price" />
+            <input id="total_price"
+              class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
+              v-model="form.total_price" type="number" placeholder="Total Price" readonly />
+
+            <InputError class="mt-2" :message="form.errors.total_price" />
           </div>
 
           <div class="col-span-1 md:col-span-2">

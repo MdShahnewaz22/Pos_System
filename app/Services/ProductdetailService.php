@@ -57,14 +57,14 @@ class ProductdetailService
         return false;
     }
 
-    public function changeStatus($request)
-    {
-        $dataInfo = $this->productdetailModel->findOrFail($request->id);
+    // public function changeStatus($request)
+    // {
+    //     $dataInfo = $this->productdetailModel->findOrFail($request->id);
 
-        $dataInfo->update(['status' => $request->status]);
+    //     $dataInfo->update(['status' => $request->status]);
 
-        return $dataInfo;
-    }
+    //     return $dataInfo;
+    // }
 
     public function activeList()
     {

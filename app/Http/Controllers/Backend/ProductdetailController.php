@@ -59,10 +59,11 @@ class ProductdetailController extends Controller
             ['fieldName' => 'unit_value', 'class' => 'text-center'],
             ['fieldName' => 'color_id', 'class' => 'text-center'],
             ['fieldName' => 'size_id', 'class' => 'text-center'],
-            ['fieldName' => 'selling_price', 'class' => 'text-center'],
             ['fieldName' => 'purchase_price', 'class' => 'text-center'],
+            ['fieldName' => 'selling_price', 'class' => 'text-center'],
             ['fieldName' => 'tax', 'class' => 'text-center'],
             ['fieldName' => 'discount', 'class' => 'text-center'],
+            ['fieldName' => 'total_price', 'class' => 'text-center'],
             ['fieldName' => 'image', 'class' => 'text-center'],
         ];
     }
@@ -75,10 +76,11 @@ class ProductdetailController extends Controller
             'Unit Value',
             'Color Name',
             'Size Name',
-            'Selling Price',
             'Purchase Price',
+            'Selling Price',
             'Tax',
             'Discount',
+            'Total Price',
             'Image',
             'Action'
         ];
@@ -106,10 +108,11 @@ class ProductdetailController extends Controller
             $customData->unit_value = $data->unit_value;
             $customData->color_id = $data->color->name;
             $customData->size_id = $data->size->name;
-            $customData->selling_price = $data->selling_price;
             $customData->purchase_price = $data->purchase_price;
+            $customData->selling_price = $data->selling_price;
             $customData->tax = $data->tax;
             $customData->discount = $data->discount;
+            $customData->total_price = $data->total_price;
             // $customData->image = $data->image;
             $customData->image = '<img src="' . $data->image . '" height="60" width="70"/>';
             $customData->hasLink = true;
@@ -302,38 +305,38 @@ class ProductdetailController extends Controller
         }
     }
 
-    public function changeStatus()
-    {
-        DB::beginTransaction();
+    // public function changeStatus()
+    // {
+    //     DB::beginTransaction();
 
-        try {
-            $dataInfo = $this->productdetailService->changeStatus(request());
+    //     try {
+    //         $dataInfo = $this->productdetailService->changeStatus(request());
 
-            if ($dataInfo->wasChanged()) {
-                $message = 'Productdetail ' . request()->status . ' Successfully';
-                $this->storeAdminWorkLog($dataInfo->id, 'productdetails', $message);
+    //         if ($dataInfo->wasChanged()) {
+    //             $message = 'Productdetail ' . request()->status . ' Successfully';
+    //             $this->storeAdminWorkLog($dataInfo->id, 'productdetails', $message);
 
-                DB::commit();
+    //             DB::commit();
 
-                return redirect()
-                    ->back()
-                    ->with('successMessage', $message);
-            } else {
-                DB::rollBack();
+    //             return redirect()
+    //                 ->back()
+    //                 ->with('successMessage', $message);
+    //         } else {
+    //             DB::rollBack();
 
-                $message = "Failed To " . request()->status . " Productdetail.";
-                return redirect()
-                    ->back()
-                    ->with('errorMessage', $message);
-            }
-        } catch (Exception $err) {
-            DB::rollBack();
-            $this->storeSystemError('Backend', 'ProductdetailController', 'changeStatus', substr($err->getMessage(), 0, 1000));
-            DB::commit();
-            $message = "Server Errors Occur. Please Try Again.";
-            return redirect()
-                ->back()
-                ->withErrors(['error' => $message]);
-        }
-    }
+    //             $message = "Failed To " . request()->status . " Productdetail.";
+    //             return redirect()
+    //                 ->back()
+    //                 ->with('errorMessage', $message);
+    //         }
+    //     } catch (Exception $err) {
+    //         DB::rollBack();
+    //         $this->storeSystemError('Backend', 'ProductdetailController', 'changeStatus', substr($err->getMessage(), 0, 1000));
+    //         DB::commit();
+    //         $message = "Server Errors Occur. Please Try Again.";
+    //         return redirect()
+    //             ->back()
+    //             ->withErrors(['error' => $message]);
+    //     }
+    // }
 }

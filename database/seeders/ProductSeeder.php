@@ -29,8 +29,12 @@ class ProductSeeder extends Seeder
                 'sku' => 'a1b2',
             ],
             [
-                'name' => 'Milk',
+                'name' => 'Shoe',
                 'sku' => 'ab12c',
+            ],
+            [
+                'name' => 'Sugar',
+                'sku' => 'ab1d2c',
             ],
         ];
     }
