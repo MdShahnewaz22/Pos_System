@@ -75,11 +75,7 @@ class UnitController extends Controller
             $customData->hasLink = true;
             $customData->links = [
 
-                //   [
-                //     'linkClass' => 'semi-bold text-white statusChange ' . (($data->status == 'Active') ? "bg-gray-500" : "bg-green-500"),
-                //     'link' => route('backend.unit.status.change', ['id' => $data->id, 'status' => $data->status == 'Active' ? 'Inactive' : 'Active']),
-                //     'linkLabel' => getLinkLabel((($data->status == 'Active') ? "Inactive" : "Active"), null, null)
-                // ],
+                
 
                 [
                     'linkClass' => 'bg-yellow-400 text-black semi-bold',
@@ -246,38 +242,5 @@ class UnitController extends Controller
         }
     }
 
-    public function changeStatus()
-    {
-        DB::beginTransaction();
-
-        try {
-            $dataInfo = $this->unitService->changeStatus(request());
-
-            if ($dataInfo->wasChanged()) {
-                $message = 'Unit ' . request()->status . ' Successfully';
-                $this->storeAdminWorkLog($dataInfo->id, 'units', $message);
-
-                DB::commit();
-
-                return redirect()
-                    ->back()
-                    ->with('successMessage', $message);
-            } else {
-                DB::rollBack();
-
-                $message = "Failed To " . request()->status . " Unit.";
-                return redirect()
-                    ->back()
-                    ->with('errorMessage', $message);
-            }
-        } catch (Exception $err) {
-            DB::rollBack();
-            $this->storeSystemError('Backend', 'UnitController', 'changeStatus', substr($err->getMessage(), 0, 1000));
-            DB::commit();
-            $message = "Server Errors Occur. Please Try Again.";
-            return redirect()
-                ->back()
-                ->withErrors(['error' => $message]);
-        }
-    }
+    
 }

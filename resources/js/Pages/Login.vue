@@ -36,12 +36,15 @@ const submit = () => {
 
 <template>
     <Head title="Log in" />
+   
 
     <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
+        <h2 style="text-align: center; font-weight: bold;">Pos System Management</h2>
 
+        <!-- <template #logo>
+            <AuthenticationCardLogo />
+        </template> -->
+        
         <div v-if="errorMessage" class="mb-4 text-sm font-medium text-red-600">
             {{ errorMessage }}
         </div>

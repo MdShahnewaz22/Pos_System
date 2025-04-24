@@ -99,14 +99,14 @@
                             <div class="col">
                                 <div class="card h-100 shadow-sm">
                                     <a href="{{ url('/productdetail/' . $item->id) }}">
-                                        <img style="height: 120px; width: 170px;" src="{{ $item->image }}"
+                                        <img style="height: 100px; width: 140px;" src="{{ $item->image }}"
                                             alt="Product Image">
                                     </a>
 
                                     <div class="card-body text-center p-2 d-flex flex-column">
                                         <div class="card-title text-truncate">{{ $item->product->name }}</div>
-                                        <div class="text-muted small">1 Unit | SKU123</div>
-                                        <div class="text-muted small">Stock: 25</div>
+                                        <div class="text-muted small">SKU: {{ $item->product->sku }}</div>
+                                        <div class="text-muted small">Stock: {{ $item->unit_value }}</div>
 
                                         <div class="price-tag mt-1 mb-2">
                                             <span class="text-success fw-bold"> ৳{{ $item->total_price }}</span>

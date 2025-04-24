@@ -91,7 +91,7 @@ class RoleService
     {
         $roleInfo=$this->spatieRoleModel->find($roleId);
 
-        $roleInfo->syncPermissions($permissions);
+        // $roleInfo->syncPermissions($permissions);
 
         return $roleInfo;
     }

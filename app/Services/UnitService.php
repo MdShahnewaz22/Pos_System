@@ -57,18 +57,4 @@ class UnitService
         return false;
     }
 
-    public function changeStatus($request)
-    {
-        $dataInfo = $this->unitModel->findOrFail($request->id);
-
-        $dataInfo->update(['status' => $request->status]);
-
-        return $dataInfo;
-    }
-
-    public function activeList()
-    {
-        return $this->unitModel->whereNull('deleted_at')->where('status', 'Active')->get();
-    }
-
 }

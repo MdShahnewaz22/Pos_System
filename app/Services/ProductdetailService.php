@@ -57,18 +57,5 @@ class ProductdetailService
         return false;
     }
 
-    // public function changeStatus($request)
-    // {
-    //     $dataInfo = $this->productdetailModel->findOrFail($request->id);
-
-    //     $dataInfo->update(['status' => $request->status]);
-
-    //     return $dataInfo;
-    // }
-
-    public function activeList()
-    {
-        return $this->productdetailModel->whereNull('deleted_at')->where('status', 'Active')->get();
-    }
-
+ 
 }

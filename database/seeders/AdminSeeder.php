@@ -24,19 +24,9 @@ class AdminSeeder extends Seeder
             'last_name' => 'Shahnewaz ',
             'email' => 'mdshahnewazs77@gmail.com',
             'phone' => '01785915418',
-            'password' =>'asdasd',
-            'role_id' => 1,
-            'photo' => null,
-            'address' => 'RDTL Head Office',
-            'status' => 'Active',
-            'created_at' => now(),
-            'updated_at' => now(),
+            'password' =>'abc123',
         ]);
         
-
-        $admin->assignRole(Role::find(1)->id);
-
-        $admin->assignRole(Role::find(2)->id);
     }
     
 }

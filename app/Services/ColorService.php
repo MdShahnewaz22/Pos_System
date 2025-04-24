@@ -57,18 +57,5 @@ class ColorService
         return false;
     }
 
-    public function changeStatus($request)
-    {
-        $dataInfo = $this->colorModel->findOrFail($request->id);
-
-        $dataInfo->update(['status' => $request->status]);
-
-        return $dataInfo;
-    }
-
-    public function activeList()
-    {
-        return $this->colorModel->whereNull('deleted_at')->where('status', 'Active')->get();
-    }
 
 }

@@ -57,18 +57,4 @@ class SizeService
         return false;
     }
 
-    public function changeStatus($request)
-    {
-        $dataInfo = $this->sizeModel->findOrFail($request->id);
-
-        $dataInfo->update(['status' => $request->status]);
-
-        return $dataInfo;
-    }
-
-    public function activeList()
-    {
-        return $this->sizeModel->whereNull('deleted_at')->where('status', 'Active')->get();
-    }
-
 }

@@ -39,7 +39,7 @@ class HandleInertiaRequests extends Middleware
         }
         $sideMenus = (session()->has('sideMenus')) ? session()->get('sideMenus') : getSideMenus();
 
-        $companyInfo = (session()->has('companyInfo')) ? session()->get('companyInfo') : Company::first();
+        // $companyInfo = (session()->has('companyInfo')) ? session()->get('companyInfo') : Company::first();
 
 
 

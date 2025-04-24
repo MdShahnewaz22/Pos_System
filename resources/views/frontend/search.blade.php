@@ -64,10 +64,10 @@
 
 <body>
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     @endif
 
     <div class="container-fluid">
@@ -86,52 +86,51 @@
                 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3 product-grid">
                     {{-- @dd($products); --}}
                     @if ($products->isEmpty())
-                        <div class="alert alert-warning">
-                            No products found for "{{ $searchTerm }}"
-                        </div>
+                    <div class="alert alert-warning">
+                        No products found for "{{ $searchTerm }}"
+                    </div>
                     @else
-                        @foreach ($products as $item)
-                            <form action="{{ url('add-to-cart') }}" method="POST">
-                                @csrf
-                                <div class="col">
-                                    <div class="card h-100 shadow-sm">
-                                        <a href="{{ url('/productdetail/' . $item->id) }}">
-                                            <img style="height: 120px; width: 170px;"
-                                                src="{{ $item->productDetail->image }}" alt="Product Image">
-                                        </a>
+                    @foreach ($products as $item)
+                    <form action="{{ url('add-to-cart') }}" method="POST">
+                        @csrf
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <a href="{{ url('/productdetail/' . $item->id) }}">
+                                    <img style="height: 120px; width: 170px;"
+                                        src="{{ $item->productDetail->image }}" alt="Product Image">
+                                </a>
 
-                                        <div class="card-body text-center p-2 d-flex flex-column">
-                                            <div class="card-title text-truncate">{{ $item->name }}</div>
-                                            {{-- <div class="text-muted small">1 Unit | SKU123</div>
-                <div class="text-muted small">Stock: 25</div> --}}
+                                <div class="card-body text-center p-2 d-flex flex-column">
+                                    <div class="card-title text-truncate">{{ $item->name }}</div>
+                                    
 
-                                            <div class="price-tag mt-1 mb-2">
-                                                <span class="text-success fw-bold">
-                                                    ৳{{ $item->productDetail->total_price }}</span>
-                                                <span
-                                                    class="text-muted text-decoration-line-through small">৳{{ $item->productDetail->discount }}
+                                    <div class="price-tag mt-1 mb-2">
+                                        <span class="text-success fw-bold">
+                                            ৳{{ $item->productDetail->total_price }}</span>
+                                        <span
+                                            class="text-muted text-decoration-line-through small">৳{{ $item->productDetail->discount }}
 
-                                                </span>
-                                            </div>
-
-                                            <input type="hidden" name="product_id" value="{{ $item->id }}">
-                                            <input type="hidden" name="product_name" value="{{ $item->name }}">
-                                            <input type="hidden" name="price"
-                                                value="{{ $item->productDetail->total_price }}">
-                                            <input type="hidden" name="image"
-                                                value="{{ $item->productDetail->image }}">
-
-
-                                            <div class="mt-auto">
-                                                <button class="btn btn-sm btn-outline-success w-100" style="">Add
-                                                    to cart</button>
-                                            </div>
-
-                                        </div>
+                                        </span>
                                     </div>
+
+                                    <input type="hidden" name="product_id" value="{{ $item->id }}">
+                                    <input type="hidden" name="product_name" value="{{ $item->name }}">
+                                    <input type="hidden" name="price"
+                                        value="{{ $item->productDetail->total_price }}">
+                                    <input type="hidden" name="image"
+                                        value="{{ $item->productDetail->image }}">
+
+
+                                    <div class="mt-auto">
+                                        <button class="btn btn-sm btn-outline-success w-100" style="">Add
+                                            to cart</button>
+                                    </div>
+
                                 </div>
-                            </form>
-                        @endforeach
+                            </div>
+                        </div>
+                    </form>
+                    @endforeach
                     @endif
                 </div>
             </div>
@@ -155,48 +154,48 @@
                     <div class="card-body">
                         <div style="max-height: 400px; overflow-y: auto;">
                             @php
-                                $cart = session('cart', []);
-                                $totalItems = 0;
-                                $subtotal = 0;
+                            $cart = session('cart', []);
+                            $totalItems = 0;
+                            $subtotal = 0;
                             @endphp
 
                             @forelse($cart as $id => $item)
-                                @php
-                                    $totalItems += $item['quantity'];
-                                    $subtotal += $item['price'] * $item['quantity'];
-                                @endphp
-                                <div class="cart-item mb-2 border-bottom pb-2">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="me-3" style="width: 80px;">
-                                            <img src="{{ $item['image'] }}" alt="Product" class="img-fluid rounded">
-                                        </div>
-                                        <div>
-                                            <strong>{{ $item['name'] }}</strong>
-                                            <div>৳{{ $item['price'] }}</div>
-                                        </div>
-                                        <div class="quantity-control d-flex align-items-center gap-1">
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline-secondary btn-decrement"
-                                                data-id="{{ $id }}">-</button>
-                                            <input type="number" class="form-control form-control-sm quantity-input"
-                                                value="{{ $item['quantity'] }}" disabled>
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline-secondary btn-increment"
-                                                data-id="{{ $id }}">+</button>
-                                        </div>
+                            @php
+                            $totalItems += $item['quantity'];
+                            $subtotal += $item['price'] * $item['quantity'];
+                            @endphp
+                            <div class="cart-item mb-2 border-bottom pb-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="me-3" style="width: 80px;">
+                                        <img src="{{ $item['image'] }}" alt="Product" class="img-fluid rounded">
+                                    </div>
+                                    <div>
+                                        <strong>{{ $item['name'] }}</strong>
+                                        <div>৳{{ $item['price'] }}</div>
+                                    </div>
+                                    <div class="quantity-control d-flex align-items-center gap-1">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-secondary btn-decrement"
+                                            data-id="{{ $id }}">-</button>
+                                        <input type="number" class="form-control form-control-sm quantity-input"
+                                            value="{{ $item['quantity'] }}" disabled>
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-secondary btn-increment"
+                                            data-id="{{ $id }}">+</button>
+                                    </div>
 
-                                    </div>
-                                    <div class="text-end mt-1 d-flex justify-content-between align-items-center">
-                                        <strong>৳{{ $item['price'] * $item['quantity'] }}</strong>
-                                        <form action="{{ url('cart/remove') }}" method="POST" class="ms-2">
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{ $id }}">
-                                            <button class="btn btn-sm btn-danger" title="Remove item">×</button>
-                                        </form>
-                                    </div>
                                 </div>
+                                <div class="text-end mt-1 d-flex justify-content-between align-items-center">
+                                    <strong>৳{{ $item['price'] * $item['quantity'] }}</strong>
+                                    <form action="{{ url('cart/remove') }}" method="POST" class="ms-2">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $id }}">
+                                        <button class="btn btn-sm btn-danger" title="Remove item">×</button>
+                                    </form>
+                                </div>
+                            </div>
                             @empty
-                                <p class="text-muted">Your cart is empty.</p>
+                            <p class="text-muted">Your cart is empty.</p>
                             @endforelse
                         </div>
 
@@ -216,7 +215,7 @@
                             @csrf
                             <input type="hidden" class="form-control" name="subtotal" value="{{ $subtotal }}">
                             <div class="mb-2">
-                                <input type="text" class="form-control" placeholder="Full Name"name="name">
+                                <input type="text" class="form-control" placeholder="Full Name" name="name">
                             </div>
                             <div class="mb-2">
                                 <textarea class="form-control" rows="2" placeholder="Address" name="address"></textarea>
@@ -331,16 +330,17 @@
     document.querySelectorAll('.btn-increment').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = this.dataset.id;
-            fetch('{{ url('cart/increment') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        product_id: id
+            fetch('{{ url('
+                    cart / increment ') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            product_id: id
+                        })
                     })
-                })
                 .then(res => res.json())
                 .then(() => location.reload());
         });
@@ -349,16 +349,17 @@
     document.querySelectorAll('.btn-decrement').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = this.dataset.id;
-            fetch('{{ url('cart/decrement') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        product_id: id
+            fetch('{{ url('
+                    cart / decrement ') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            product_id: id
+                        })
                     })
-                })
                 .then(res => res.json())
                 .then(() => location.reload());
         });

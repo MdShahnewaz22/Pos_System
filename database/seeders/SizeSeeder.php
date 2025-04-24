@@ -31,6 +31,12 @@ class SizeSeeder extends Seeder
             [
                 'name' => 'XL'
             ],
+            [
+                'name' => '38'
+            ],
+            [
+                'name' => '41'
+            ],
         ];
     }
 }

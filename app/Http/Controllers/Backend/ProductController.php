@@ -81,12 +81,7 @@ class ProductController extends Controller
             $customData->hasLink = true;
             $customData->links = [
 
-                //   [
-                //     'linkClass' => 'semi-bold text-white statusChange ' . (($data->status == 'Active') ? "bg-gray-500" : "bg-green-500"),
-                //     'link' => route('backend.product.status.change', ['id' => $data->id, 'status' => $data->status == 'Active' ? 'Inactive' : 'Active']),
-                //     'linkLabel' => getLinkLabel((($data->status == 'Active') ? "Inactive" : "Active"), null, null)
-                // ],
-
+               
                 [
                     'linkClass' => 'bg-yellow-400 text-black semi-bold',
                     'link' => route('backend.product.edit', $data->id),
@@ -252,38 +247,4 @@ class ProductController extends Controller
         }
     }
 
-    public function changeStatus()
-    {
-        DB::beginTransaction();
-
-        try {
-            $dataInfo = $this->productService->changeStatus(request());
-
-            if ($dataInfo->wasChanged()) {
-                $message = 'Product ' . request()->status . ' Successfully';
-                $this->storeAdminWorkLog($dataInfo->id, 'products', $message);
-
-                DB::commit();
-
-                return redirect()
-                    ->back()
-                    ->with('successMessage', $message);
-            } else {
-                DB::rollBack();
-
-                $message = "Failed To " . request()->status . " Product.";
-                return redirect()
-                    ->back()
-                    ->with('errorMessage', $message);
-            }
-        } catch (Exception $err) {
-            DB::rollBack();
-            $this->storeSystemError('Backend', 'ProductController', 'changeStatus', substr($err->getMessage(), 0, 1000));
-            DB::commit();
-            $message = "Server Errors Occur. Please Try Again.";
-            return redirect()
-                ->back()
-                ->withErrors(['error' => $message]);
-        }
-    }
 }
