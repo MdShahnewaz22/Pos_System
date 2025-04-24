@@ -22,9 +22,9 @@ class ProductdetailController extends Controller
 {
     use SystemTrait;
 
-    protected $productdetailService,$productService,$unitService,$colorService,$sizeService;
+    protected $productdetailService, $productService, $unitService, $colorService, $sizeService;
 
-    public function __construct(ProductdetailService $productdetailService,ProductService $productService,UnitService $unitService,ColorService $colorService,SizeService $sizeService)
+    public function __construct(ProductdetailService $productdetailService, ProductService $productService, UnitService $unitService, ColorService $colorService, SizeService $sizeService)
     {
         $this->productdetailService = $productdetailService;
         $this->productService = $productService;
@@ -93,7 +93,7 @@ class ProductdetailController extends Controller
         if (request()->filled('name'))
             $query->where('name', 'like', request()->name . '%');
 
-            if (request()->filled('image'))
+        if (request()->filled('image'))
             $query->where('image', 'like', request()->image . '%');
 
         $datas = $query->paginate(request()->numOfData ?? 10)->withQueryString();
@@ -102,12 +102,12 @@ class ProductdetailController extends Controller
             $customData = new \stdClass();
             $customData->index = $index + 1;
 
-         
+
             $customData->product_id = $data->product->name;
             $customData->unit_id = $data->unit->name;
             $customData->unit_value = $data->unit_value;
-            $customData->color_id = $data->color->name;
-            $customData->size_id = $data->size->name;
+            $customData->color_id = $data->color?->name ?? '';
+            $customData->size_id = $data->size?->name ?? '';
             $customData->purchase_price = $data->purchase_price;
             $customData->selling_price = $data->selling_price;
             $customData->tax = $data->tax;
@@ -162,6 +162,7 @@ class ProductdetailController extends Controller
 
     public function store(ProductdetailRequest $request)
     {
+        // dd($request->all());
 
         DB::beginTransaction();
         try {
@@ -169,7 +170,7 @@ class ProductdetailController extends Controller
             $data = $request->validated();
 
             if ($request->hasFile('image'))
-            $data['image'] = $this->imageUpload($request->file('image'), 'productdetail');
+                $data['image'] = $this->imageUpload($request->file('image'), 'productdetail');
 
             $dataInfo = $this->productdetailService->create($data);
 
@@ -235,8 +236,8 @@ class ProductdetailController extends Controller
             $data = $request->validated();
 
             if ($request->hasFile('image'))
-            $data['image'] = $this->imageUpload($request->file('image'), 'productdetails');
-        
+                $data['image'] = $this->imageUpload($request->file('image'), 'productdetails');
+
             $productdetail = $this->productdetailService->find($id);
 
 

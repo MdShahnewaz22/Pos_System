@@ -20,14 +20,14 @@ return new class extends Migration
                 $table->unsignedBigInteger('unit_id');
                 $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');   
                 $table->string('unit_value',255);      
-                $table->unsignedBigInteger('color_id');
+                $table->unsignedBigInteger('color_id')->nullable();
                 $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');                
-                $table->unsignedBigInteger('size_id');
+                $table->unsignedBigInteger('size_id')->nullable();
                 $table->foreign('size_id')->references('id')->on('sizes')->onDelete('cascade');                
                 $table->string('purchase_price', 255);  
                 $table->decimal('selling_price', 10, 2);            
-                $table->decimal('tax',  10, 2)->default(0)->change();              
-                $table->decimal('discount', 10, 2)->default(0)->change();  
+                $table->decimal('tax',  10, 2)->default(0);              
+                $table->decimal('discount', 10, 2)->default(0);  
                 $table->decimal('total_price', 10, 2);  
                 $table->string('image', 255)->nullable();            
                 $table->enum('status', ['Active', 'Inactive', 'Deleted'])->default('Active');

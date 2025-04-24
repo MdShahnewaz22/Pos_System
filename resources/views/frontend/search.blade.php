@@ -70,15 +70,6 @@
         </div>
     @endif
 
-    @if (session('message'))
-        <div class="alert alert-info">
-            {{ session('message') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-
-
     <div class="container-fluid">
         <div class="row">
 
@@ -93,52 +84,71 @@
 
 
                 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3 product-grid">
-                    @foreach ($productdetail as $item)
-                        <form action="{{ url('add-to-cart') }}" method="POST">
-                            @csrf
-                            <div class="col">
-                                <div class="card h-100 shadow-sm">
-                                    <a href="{{ url('/productdetail/' . $item->id) }}">
-                                        <img style="height: 120px; width: 170px;" src="{{ $item->image }}"
-                                            alt="Product Image">
-                                    </a>
+                    {{-- @dd($products); --}}
+                    @if ($products->isEmpty())
+                        <div class="alert alert-warning">
+                            No products found for "{{ $searchTerm }}"
+                        </div>
+                    @else
+                        @foreach ($products as $item)
+                            <form action="{{ url('add-to-cart') }}" method="POST">
+                                @csrf
+                                <div class="col">
+                                    <div class="card h-100 shadow-sm">
+                                        <a href="{{ url('/productdetail/' . $item->id) }}">
+                                            <img style="height: 120px; width: 170px;"
+                                                src="{{ $item->productDetail->image }}" alt="Product Image">
+                                        </a>
 
-                                    <div class="card-body text-center p-2 d-flex flex-column">
-                                        <div class="card-title text-truncate">{{ $item->product->name }}</div>
-                                        <div class="text-muted small">1 Unit | SKU123</div>
-                                        <div class="text-muted small">Stock: 25</div>
+                                        <div class="card-body text-center p-2 d-flex flex-column">
+                                            <div class="card-title text-truncate">{{ $item->name }}</div>
+                                            {{-- <div class="text-muted small">1 Unit | SKU123</div>
+                <div class="text-muted small">Stock: 25</div> --}}
 
-                                        <div class="price-tag mt-1 mb-2">
-                                            <span class="text-success fw-bold"> ৳{{ $item->total_price }}</span>
-                                            <span
-                                                class="text-muted text-decoration-line-through small">৳{{ $item->discount }}
+                                            <div class="price-tag mt-1 mb-2">
+                                                <span class="text-success fw-bold">
+                                                    ৳{{ $item->productDetail->total_price }}</span>
+                                                <span
+                                                    class="text-muted text-decoration-line-through small">৳{{ $item->productDetail->discount }}
 
-                                            </span>
+                                                </span>
+                                            </div>
+
+                                            <input type="hidden" name="product_id" value="{{ $item->id }}">
+                                            <input type="hidden" name="product_name" value="{{ $item->name }}">
+                                            <input type="hidden" name="price"
+                                                value="{{ $item->productDetail->total_price }}">
+                                            <input type="hidden" name="image"
+                                                value="{{ $item->productDetail->image }}">
+
+
+                                            <div class="mt-auto">
+                                                <button class="btn btn-sm btn-outline-success w-100" style="">Add
+                                                    to cart</button>
+                                            </div>
+
                                         </div>
-
-                                        <input type="hidden" name="product_id" value="{{ $item->id }}">
-                                        <input type="hidden" name="product_name" value="{{ $item->product->name }}">
-                                        <input type="hidden" name="price" value="{{ $item->total_price }}">
-                                        <input type="hidden" name="image" value="{{ $item->image }}">
-
-
-                                        <div class="mt-auto">
-                                            <button class="btn btn-sm btn-outline-success w-100" style="">Add
-                                                to cart</button>
-                                        </div>
-
                                     </div>
                                 </div>
-                            </div>
-                        </form>
-                    @endforeach
+                            </form>
+                        @endforeach
+                    @endif
                 </div>
             </div>
 
 
+
+
             <!-- Cart Section -->
             <div class="col-md-3">
+                <a href="{{ url('/') }}">
+                    <button class="mt-3 bg-blue-500  hover:bg-blue-500  text-white font-bold py-2 px-4 rounded">
+                        Back
+                    </button>
+                </a>
+
                 <div class="mt-2 card checkout-card shadow">
+
                     <div class="card-header text-white" style="background-color:rgb(63, 215, 108);">
                         <h5 class="mb-0">Billing Section</h5>
                     </div>

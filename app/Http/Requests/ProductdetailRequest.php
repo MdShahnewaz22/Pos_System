@@ -24,7 +24,7 @@ class ProductdetailRequest extends FormRequest
                     'size_id' => '',
                     'purchase_price' => 'required|string',
                     'selling_price' => 'required|numeric',
-                    'tax' => 'nullable|numeric',
+                    'tax' => 'nullable',
                     'discount' => 'nullable|numeric',
                     'total_price' => 'required|numeric',
                     'image' => 'nullable|mimes:png,jpg,jpeg|max:25048',

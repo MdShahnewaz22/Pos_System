@@ -86,11 +86,11 @@ watch(
 );
 
 
-// import { computed } from "vue";
+import { computed } from "vue";
 
-// const selectedProduct = computed(() => {
-//   return props.products.find((product) => product.id === form.product_id);
-// });
+const selectedProduct = computed(() => {
+  return props.products.find((product) => product.id === form.product_id);
+});
 
 
 </script>
@@ -149,21 +149,7 @@ watch(
               v-model="form.unit_value" type="text" placeholder="Unit Value" />
             <InputError class="mt-2" :message="form.errors.unit_value" />
           </div>
-          <div class="col-span-2 md:col-span-2">
-            <InputLabel for="color_id" value="Color Name" />
-            <select id="color_id"
-              class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.color_id">
-              <option value="">--Select Color--</option>
-              <template v-for="(color, Index) in colors" :key="Index">
-                <option :value="color.id">
-                  {{ color.name }}
-                </option>
-              </template>
-            </select>
-            <InputError class="mt-2" :message="form.errors.color_id" />
-          </div>
-          <!-- <div class="col-span-2 md:col-span-2" v-if="selectedProduct?.name !== 'Sugar'">
+          <!-- <div class="col-span-2 md:col-span-2">
             <InputLabel for="color_id" value="Color Name" />
             <select id="color_id"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
@@ -177,23 +163,22 @@ watch(
             </select>
             <InputError class="mt-2" :message="form.errors.color_id" />
           </div> -->
-
-          <div class="col-span-2 md:col-span-2">
-            <InputLabel for="size_id" value="Size Name" />
-            <select id="size_id"
+          <div class="col-span-2 md:col-span-2" v-if="selectedProduct?.name !== 'Sugar'">
+            <InputLabel for="color_id" value="Color Name" />
+            <select id="color_id"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
-              v-model="form.size_id">
-              <option value="">--Select Size--</option>
-              <template v-for="(size, Index) in sizes" :key="Index">
-                <option :value="size.id">
-                  {{ size.name }}
+              v-model="form.color_id">
+              <option value="">--Select Color--</option>
+              <template v-for="(color, Index) in colors" :key="Index">
+                <option :value="color.id">
+                  {{ color.name }}
                 </option>
               </template>
             </select>
-            <InputError class="mt-2" :message="form.errors.size_id" />
+            <InputError class="mt-2" :message="form.errors.color_id" />
           </div>
 
-          <!-- <div class="col-span-2 md:col-span-2" v-if="selectedProduct?.name !== 'Sugar'">
+          <!-- <div class="col-span-2 md:col-span-2">
             <InputLabel for="size_id" value="Size Name" />
             <select id="size_id"
               class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
@@ -207,6 +192,21 @@ watch(
             </select>
             <InputError class="mt-2" :message="form.errors.size_id" />
           </div> -->
+
+          <div class="col-span-2 md:col-span-2" v-if="selectedProduct?.name !== 'Sugar'">
+            <InputLabel for="size_id" value="Size Name" />
+            <select id="size_id"
+              class="block w-full p-2 text-sm rounded-md shadow-sm border-slate-300 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-200 focus:border-indigo-300 dark:focus:border-slate-600"
+              v-model="form.size_id">
+              <option value="">--Select Size--</option>
+              <template v-for="(size, Index) in sizes" :key="Index">
+                <option :value="size.id">
+                  {{ size.name }}
+                </option>
+              </template>
+            </select>
+            <InputError class="mt-2" :message="form.errors.size_id" />
+          </div>
 
 
 

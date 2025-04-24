@@ -14,6 +14,7 @@ use App\Http\Controllers\Backend\ColorController;
 use App\Http\Controllers\Backend\SizeController;
 use App\Http\Controllers\Backend\UnitController;
 use App\Http\Controllers\Backend\ProductdetailController;
+use App\Http\Controllers\Backend\ShippingdetailController;
 
 //don't remove this comment from route namespace
 
@@ -82,6 +83,10 @@ Route::group(['middleware' => 'AdminAuth'], function () {
     // for productdetail
 	Route::resource('productdetail', ProductdetailController::class);
 	Route::get('productdetail/{id}/status/{status}/change', [ProductdetailController::class, 'changeStatus'])->name('productdetail.status.change');
+    
+    // for Shippingdetail
+	Route::resource('shippingdetail', ShippingdetailController::class);
+	Route::get('shippingdetail/{id}/status/{status}/change', [ShippingdetailController::class, 'changeStatus'])->name('shippingdetail.status.change');
     
 
 	//don't remove this comment from route body
